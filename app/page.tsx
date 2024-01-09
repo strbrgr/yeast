@@ -9,7 +9,6 @@ export default async function Index() {
   const supabase = createClient(cookieStore)
 
   const { data: recipes } = await supabase.from("recipes").select();
-  const { data: user } = await supabase.auth.getUser()
 
   return (
     <div>
