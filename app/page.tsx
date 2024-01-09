@@ -1,14 +1,15 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers"
 import Link from "next/link"
+import RecipeBadge from "./_components/RecipeBadge";
+import Header from "./_components/Header";
 
 export default async function Index() {
   const cookieStore = cookies()
-
   const supabase = createClient(cookieStore)
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+
+  const { data: recipes } = await supabase.from("recipes").select();
+  const { data: user } = await supabase.auth.getUser()
 
   return (
     <div>
@@ -29,24 +30,18 @@ export default async function Index() {
           </div>
           <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
             <div className="text-center">
+              <Header />
               <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
                 Yeast
               </h1>
               <div className="mt-10 flex items-center justify-center gap-x-6">
-                {user ?
-                  <Link
-                    href="/recipes"
-                    className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
-                    Vote
-                  </Link> :
-                  <Link
-                    href="/login"
-                    className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
-                    Get started
+                <ul className="flex gap-4">
+                  {recipes && recipes.map((recipe: IRecipe) => <RecipeBadge key={recipe.id} recipe={recipe} />)}
+                  <Link href="add" className="border-2 rounded w-64 h-64 border-gray-400 p-8">
+                    Add
                   </Link>
-                }
+                </ul>
+
               </div>
             </div>
           </div>
