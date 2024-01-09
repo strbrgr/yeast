@@ -1,5 +1,6 @@
 import { GeistSans } from 'geist/font/sans'
 import './globals.css'
+import { AuthProvider } from './providers'
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -20,7 +21,9 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className}>
       <body>
         <main className="min-h-screen flex flex-col">
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </main>
       </body>
     </html>
